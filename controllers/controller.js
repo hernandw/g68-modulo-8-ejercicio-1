@@ -1,4 +1,4 @@
-import { addUserQuery } from "../models/queries.js";
+import { addUserQuery, getUsersQuery } from "../models/queries.js";
 import axios from "axios";
 
 export const home = (req, res) => {
@@ -7,14 +7,28 @@ export const home = (req, res) => {
 
 export const random = async (req, res) => {
   try {
-const response = await axios.get("https://randomuser.me/api/")
-console.log(response.data.results)
-res.send(response.data.results[0].gender)
+    const { data } = await axios.get("https://randomuser.me/api/");
+    const randomUser = data.results[0];
 
+    const usuario = {
+      name: randomUser.name.first,
+      lastname: randomUser.name.last,
+      email: randomUser.email,
+      password: randomUser.login.password,
+    };
+
+    await addUserQuery(usuario);
+    res.status(201).send(usuario);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };
 
-
-
+export const getUsers = async (req, res) => {
+  try {
+    const users = await getUsersQuery();
+    res.status(200).send(users);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
