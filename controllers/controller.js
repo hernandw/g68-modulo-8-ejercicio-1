@@ -1,4 +1,4 @@
-import { addUserQuery, getUsersQuery } from "../models/queries.js";
+import { addUserQuery, getUsersQuery, getGuitarsQuery, getGuitarByIdQuery } from "../models/queries.js";
 import axios from "axios";
 
 export const home = (req, res) => {
@@ -30,5 +30,25 @@ export const getUsers = async (req, res) => {
     res.status(200).send(users);
   } catch (error) {
     res.status(404).json({ error: error.message });
+  }
+};
+
+
+export const getGuitars = async (req, res) => {
+  try {
+    const guitarras = await getGuitarsQuery();
+    res.status(200).send(guitarras);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+export const getGuitarById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const guitar = await getGuitarByIdQuery(id);
+    res.status(200).send(guitar);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };

@@ -33,3 +33,36 @@ export const getUsersQuery = async () => {
     console.log(error);
   }
 };
+
+export const getGuitarsQuery = async () => {
+  try {
+    const sql = {
+      text: "SELECT * FROM guitars",
+    };
+    const result = await pool.query(sql);
+    if (result.rowCount > 0) {
+      return result.rows;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log("Error code: ", error.code, "Error Message: ", error.message);
+  }
+};
+
+export const getGuitarByIdQuery = async (id) => {
+  try {
+    const sql = {
+      text: "SELECT * FROM guitars WHERE id = $1",
+      values: [id],
+    };
+    const result = await pool.query(sql);
+    if (result.rowCount > 0) {
+      return result.rows[0];
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
